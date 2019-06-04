@@ -8,13 +8,13 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "model_a")
-public class ModelA implements Serializable {
+@Table(name = "model")
+public class Model implements Serializable {
 
     @Id @GeneratedValue
     private Long id;
 
-    @Column(name = "a_code")
+    @Column(name = "model_code")
     private String code;
 
     public Long getId() {
