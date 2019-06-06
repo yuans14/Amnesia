@@ -55,6 +55,11 @@ public class ModelController {
         repository.deleteById(id);
     }
 
+    @DeleteMapping("/v1/model")
+    public void delete(@RequestBody Model model) {
+        repository.delete(model);
+    }
+
     //...?page={pageNum}&size={pageSize}&sort={property},{direction}&sort=...
     @GetMapping("/v1/models")
     public Page<Model> findAll(@PageableDefault(sort = {"id"}) Pageable pageable) {
