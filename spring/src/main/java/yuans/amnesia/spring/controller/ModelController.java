@@ -60,4 +60,9 @@ public class ModelController {
     public Page<Model> findAll(@PageableDefault(sort = {"id"}) Pageable pageable) {
         return repository.findAll(pageable);
     }
+
+    @GetMapping("/v1/is/model/{id}/today")
+    public boolean isSaveToday(@PathVariable("id") Long id){
+        return repository.isSaveToday(repository.findById(id));
+    }
 }
