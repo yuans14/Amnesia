@@ -1,6 +1,9 @@
 package yuans.amnesia.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,30 +27,37 @@ public class ModelController {
         this.repository = repository;
     }
 
-    @PostMapping("/v1/models")
+    @PostMapping("/v1/model")
     public Model save(@RequestBody Model model) {
         return repository.save(model);
     }
 
-    @PutMapping("/v1/models")
+    @PostMapping("/v1/models")
+    public List<Model> save(@RequestBody List<Model> models) {
+        return repository.saveAll(models);
+    }
+
+    @PutMapping("/v1/model")
     public Model update(@RequestBody Model model) {
         return repository.save(model);
     }
 
-    @PatchMapping("/v1/models/{id}/{code}")
-    public Model update(@PathVariable("id") Long id, @PathVariable("code") String code) {
+    @PatchMapping("/v1/model/{id}/{code}")
+    public Model update(@PathVariable("id") Long id,
+                        @PathVariable("code") String code) {
         Model model = repository.findById(id).orElseGet(Model::new);
         model.setCode(code);
         return repository.save(model);
     }
 
-    @DeleteMapping("/v1/models/{id}")
+    @DeleteMapping("/v1/model/{id}")
     public void delete(@PathVariable("id") Long id) {
         repository.deleteById(id);
     }
 
+    //...?page={pageNum}&size={pageSize}&sort={property},{direction}&sort=...
     @GetMapping("/v1/models")
-    public List<Model> findAll() {
-        return repository.findAll();
+    public Page<Model> findAll(@PageableDefault(sort = {"id"}) Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }
