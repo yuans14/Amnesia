@@ -9,7 +9,7 @@ import java.util.Optional;
 public class ExtModelRepositoryImpl implements ExtModelRepository {
 
     @Override
-    public boolean isSaveToday(Optional<Model> model) {
+    public boolean isSavedToday(Optional<Model> model) {
         return model.map(Model::getSaveTime)
                 .map(time -> time.toInstant()
                         .atZone(ZoneId.systemDefault())

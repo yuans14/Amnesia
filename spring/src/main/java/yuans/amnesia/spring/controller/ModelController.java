@@ -37,6 +37,7 @@ public class ModelController {
         return repository.saveAll(models);
     }
 
+
     @PutMapping("/v1/model")
     public Model update(@RequestBody Model model) {
         return repository.save(model);
@@ -50,6 +51,7 @@ public class ModelController {
         return repository.save(model);
     }
 
+
     @DeleteMapping("/v1/model/{id}")
     public void delete(@PathVariable("id") Long id) {
         repository.deleteById(id);
@@ -60,14 +62,21 @@ public class ModelController {
         repository.delete(model);
     }
 
+
     //...?page={pageNum}&size={pageSize}&sort={property},{direction}&sort=...
     @GetMapping("/v1/models")
     public Page<Model> findAll(@PageableDefault(sort = {"id"}) Pageable pageable) {
         return repository.findAll(pageable);
     }
 
+
     @GetMapping("/v1/is/model/{id}/today")
-    public boolean isSaveToday(@PathVariable("id") Long id){
-        return repository.isSaveToday(repository.findById(id));
+    public boolean isSavedToday(@PathVariable("id") Long id){
+        return repository.isSavedToday(repository.findById(id));
     }
+
+//    @GetMapping("/v1/model/{id}/str")
+//    public String print(@PathVariable("id") Long id){
+//        return repository.print(repository.findById(id));
+//    }
 }

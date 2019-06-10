@@ -1,6 +1,6 @@
 package yuans.amnesia.spring.repository;
 
-public interface OvrRepository<T> {
+public interface OvrRepositoryDel<T> {
 
     void delete(T entity);
 }

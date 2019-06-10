@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ExtModelRepository {
 
-    boolean isSaveToday(Optional<Model> model);
+    boolean isSavedToday(Optional<Model> model);
 }
