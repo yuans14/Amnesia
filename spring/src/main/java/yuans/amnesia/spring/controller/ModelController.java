@@ -27,6 +27,7 @@ public class ModelController {
         this.repository = repository;
     }
 
+
     @PostMapping("/v1/model")
     public Model save(@RequestBody Model model) {
         return repository.save(model);
@@ -44,21 +45,15 @@ public class ModelController {
     }
 
     @PatchMapping("/v1/model/{id}/{code}")
-    public Model update(@PathVariable("id") Long id,
+    public Model update(@PathVariable("id") Model model,
                         @PathVariable("code") String code) {
-        Model model = repository.findById(id).orElseGet(Model::new);
         model.setCode(code);
         return repository.save(model);
     }
 
 
     @DeleteMapping("/v1/model/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        repository.deleteById(id);
-    }
-
-    @DeleteMapping("/v1/model")
-    public void delete(@RequestBody Model model) {
+    public void delete(@PathVariable("id") Model model) {
         repository.delete(model);
     }
 
@@ -74,9 +69,4 @@ public class ModelController {
     public boolean isSavedToday(@PathVariable("id") Long id){
         return repository.isSavedToday(repository.findById(id));
     }
-
-//    @GetMapping("/v1/model/{id}/str")
-//    public String print(@PathVariable("id") Long id){
-//        return repository.print(repository.findById(id));
-//    }
 }
