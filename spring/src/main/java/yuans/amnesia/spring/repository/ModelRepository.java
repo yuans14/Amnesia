@@ -6,5 +6,5 @@ import yuans.amnesia.spring.entity.Model;
 public interface ModelRepository extends
         JpaRepository<Model, Long>, ExtModelRepository, OvrRepositoryDel<Model> {
 
-    // derived query
+    // derived query, @Query, Query dsl
 }

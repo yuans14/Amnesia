@@ -10,7 +10,7 @@ public class ExtModelRepositoryImpl implements ExtModelRepository {
 
     @Override
     public boolean isSavedToday(Optional<Model> model) {
-        return model.map(Model::getSaveTime)
+        return model.map(Model::getOperateTime)
                 .map(time -> time.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate())

@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import yuans.amnesia.spring.entity.Model;
 import yuans.amnesia.spring.repository.ModelRepository;
 
-import java.util.List;
+import java.util.Date;
 
 @RestController
 public class ModelController {
@@ -27,46 +28,36 @@ public class ModelController {
         this.repository = repository;
     }
 
-
-    @PostMapping("/v1/model")
-    public Model save(@RequestBody Model model) {
-        return repository.save(model);
-    }
-
-    @PostMapping("/v1/models")
-    public List<Model> save(@RequestBody List<Model> models) {
-        return repository.saveAll(models);
-    }
-
-
-    @PutMapping("/v1/model")
-    public Model update(@RequestBody Model model) {
-        return repository.save(model);
-    }
-
-    @PatchMapping("/v1/model/{id}/{code}")
-    public Model update(@PathVariable("id") Model model,
-                        @PathVariable("code") String code) {
-        model.setCode(code);
-        return repository.save(model);
-    }
-
-
-    @DeleteMapping("/v1/model/{id}")
-    public void delete(@PathVariable("id") Model model) {
-        repository.delete(model);
-    }
-
-
-    //...?page={pageNum}&size={pageSize}&sort={property},{direction}&sort=...
     @GetMapping("/v1/models")
-    public Page<Model> findAll(@PageableDefault(sort = {"id"}) Pageable pageable) {
+    public Page<Model> find(@PageableDefault(sort = {"id"}) Pageable pageable) {
         return repository.findAll(pageable);
     }
 
+    @PostMapping("/v1/models")
+    public Model save(@RequestBody Model model) {
+        model.setId(null);
+        return repository.save(model);
+    }
 
-    @GetMapping("/v1/is/model/{id}/today")
-    public boolean isSavedToday(@PathVariable("id") Long id){
-        return repository.isSavedToday(repository.findById(id));
+    @PutMapping("/v1/models/{id}")
+    public Model update(@PathVariable("id") Long id,
+                        @RequestBody Model model) {
+        model.setId(id);
+        return repository.save(model);
+    }
+
+    @PatchMapping("/v1/models/{id}")
+    public Model update(@PathVariable("id") Long id,
+                        @RequestParam("code") String code) {
+        Model model = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("The model must exist"));
+        model.setCode(code);
+        model.setOperateTime(new Date());
+        return repository.save(model);
+    }
+
+    @DeleteMapping("/v1/models/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        repository.deleteById(id);
     }
 }

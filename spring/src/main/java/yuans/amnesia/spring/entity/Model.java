@@ -19,8 +19,8 @@ public class Model implements Serializable {
     @Column(name = "model_code")
     private String code;
 
-    @Column(name = "save_time")
-    private Date saveTime = new Date();
+    @Column(name = "operate_time")
+    private Date operateTime = new Date();
 
     public Long getId() {
         return id;
@@ -38,11 +38,11 @@ public class Model implements Serializable {
         this.code = code;
     }
 
-    public Date getSaveTime() {
-        return saveTime;
+    public Date getOperateTime() {
+        return operateTime;
     }
 
-    public void setSaveTime(Date saveTime) {
-        this.saveTime = saveTime;
+    public void setOperateTime(Date operateTime) {
+        this.operateTime = operateTime;
     }
 }
