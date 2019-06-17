@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import yuans.amnesia.spring.entity.Model;
 import yuans.amnesia.spring.repository.ModelRepository;
 
+import java.util.List;
+
 @RestController
 public class ModelController {
 
@@ -31,32 +34,39 @@ public class ModelController {
     }
 
     @GetMapping("/v1/models/{id}")
-    @Cacheable("model")
+    @Cacheable("models")
     public Model findById(@PathVariable("id") Long id) {
         return repository.findById(id).orElse(null);
     }
     @GetMapping("/v1/models")
-//    @Cacheable("models")
+    @Cacheable(value = "models", key = "'all'")
+    public List<Model> find() {
+        return repository.findAll();
+    }
+    @GetMapping("/v1/models/page")
     public Page<Model> find(@PageableDefault(sort = {"id"}) Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @PostMapping("/v1/models")
-    @CachePut(value = "model", key = "#result.id")
+    @Caching(put = @CachePut(value = "models", key = "#result.id"),
+            evict = @CacheEvict(value = "models", key = "'all'"))
     public Model save(@RequestBody Model model) {
         Assert.isNull(model.getId(), "The given id must be null");
         return repository.save(model);
     }
 
     @PutMapping("/v1/models")
-    @CachePut(value = "model", key = "#result.id")
+    @Caching(put = @CachePut(value = "models", key = "#result.id"),
+            evict = @CacheEvict(value = "models", key = "'all'"))
     public Model update(@RequestBody Model model) {
         Assert.notNull(model.getId(), "The given id must not be null");
         return repository.save(model);
     }
 
     @PatchMapping("/v1/models/{id}")
-    @CachePut(value = "model", key = "#result.id")
+    @Caching(put = @CachePut(value = "models", key = "#result.id"),
+            evict = @CacheEvict(value = "models", key = "'all'"))
     public Model update(@PathVariable("id") Long id,
                         @RequestParam("code") String code) {
         Model model = repository.findById(id)
@@ -66,8 +76,14 @@ public class ModelController {
     }
 
     @DeleteMapping("/v1/models/{id}")
-    @CacheEvict("model")
+    @Caching(evict = {@CacheEvict("models"),
+            @CacheEvict(value = "models", key = "'all'")})
     public void delete(@PathVariable("id") Long id) {
         repository.deleteById(id);
+    }
+    @DeleteMapping("/v1/models")
+    @CacheEvict(value = "models", allEntries = true)
+    public void delete() {
+        repository.deleteAll();
     }
 }
