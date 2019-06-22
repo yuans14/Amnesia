@@ -14,6 +14,7 @@ public class Model implements Serializable {
 
     @Id
     @GeneratedValue
+    @Column(name = "model_id")
     private Long id;
 
     @Column(name = "model_code")
